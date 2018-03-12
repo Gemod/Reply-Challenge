@@ -1,9 +1,10 @@
 package graphs;
 
-import java.awt.Point;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
+import org.omg.Messaging.SYNC_WITH_TRANSPORT;
 
 public class Map {
 	private int[][] matrix;
@@ -71,41 +72,28 @@ public class Map {
 	public void setCross(HashMap<Obstacol, List<Pair>> cross) {
 		this.cross = cross;
 	}
-	public HashMap<Obstacol,List<Pair>> getObstacolsAndPoints()
+	public List<Pair> getMatrixPath()
 	{
+		List<Pair> path= new ArrayList<>();
 		List<Pair> points=this.getallCell();
-		
-		
 		for(Pair p: points)
 		{
 			for(Obstacol o : this.getObstacols())
 			{
-				if(this.isInside(o.getX1(),o.getY1(),o.getX2(),o.getY2(),o.getX3(),o.getY3(),p.getX(),p.getY()))
+				if(!isInside(o.getX1(),o.getY1(),o.getX2(),o.getY2(),o.getX3(),o.getY3(),p.getX(),p.getY()))
 				{
-					System.out.println("inside with point "+ p.getX()+" "+p.getY());
-					if(cross.get(o)==null)
+					if(!path.contains(p))
 					{
-						List<Pair> op= new ArrayList<>();
-						op.add(p);
-						cross.put(o,op);
-					}
-					else
-					{
-						List<Pair> ob= cross.get(o);
-						ob.add(p);
-						cross.put(o,ob);
+						path.add(p);
 					}
 				}
 			}
 		}
-		return cross;
+		return path;
 	}
-	
-	
-	
 	// x, y are coordinate of point that we want to know if is a point of triangle
-	private boolean isInside(int x1, int y1, int x2, int y2, int x3, int y3, int x, int y) {
-
+	private boolean isInside(int x1, int y1, int x2, int y2, int x3, int y3, int x, int y) 
+	{
 		double A = area(x1, y1, x2, y2, x3, y3);
 		double A1 = area(x, y, x2, y2, x3, y3);
 		double A2 = area(x1, y1, x, y, x3, y3);
@@ -116,21 +104,10 @@ public class Map {
 	{
 		List<Obstacol> obstacols= new ArrayList<>();
 		obstacols.add(new Obstacol(2, 0, 2, 2, 4, 0));
-		Map maps = new Map(5,5,obstacols);
-		
-		maps.getObstacolsAndPoints();
-		String name=" ";
-		
-		for(Obstacol o : maps.getCross().keySet())
+		Map maps = new Map(5,5,obstacols);		
+		for(Pair p: maps.getMatrixPath())
 		{
-			name+="obstacol  " + o + " has point ";
-			for(Pair p: maps.getCross().get(o))
-			{
-				name+=" on x "+ p.getX() +" on y "+ p.getY() + "\n";
-			}
-			System.out.println(name);
-			name="";
+			System.out.println(p.toString());
 		}
-		
 	}
 }

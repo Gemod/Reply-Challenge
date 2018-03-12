@@ -22,6 +22,14 @@ public class Pair
 	public void setY(int y) {
 		this.y = y;
 	}
-	
+	@Override
+	public String toString()
+	{
+		return "x :" +x + " y: "+y +"\n";
+	}
+	public boolean equals(Pair p)
+	{
+		return (this.x == p.getX() && this.y == p.getY());
+	}
 	
 }
